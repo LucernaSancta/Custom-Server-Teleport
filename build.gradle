@@ -6,7 +6,7 @@ plugins {
 }
 
 group = 'org.lucerna'
-version = '0.1.0-ALPHA'
+version = '1.0.0'
 
 repositories {
     mavenCentral()
