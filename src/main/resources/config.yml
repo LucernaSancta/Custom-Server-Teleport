@@ -2,5 +2,9 @@
 
 # Add here the servers you want to access followed by the custom commands
 servers:
-    #- example: ["example","ex"]
-    - hub: ["hub","lobby","l"]
+    #- example:
+    #    commands: ["example","ex"]
+    #    permission: "customcommand.example"
+    - hub:
+        commands: ["hub","lobby","l"]
+        permission: "customcommand.hub"
