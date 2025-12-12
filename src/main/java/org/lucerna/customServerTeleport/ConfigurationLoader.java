@@ -35,6 +35,10 @@ public class ConfigurationLoader {
         return configuration;
     }
 
+    public boolean reload() {
+        return loadConfiguration();
+    }
+
     private boolean loadConfiguration() {
         // Create the dataDirectory if it does not exist
         if (!Files.exists(dataDirectory)) {
