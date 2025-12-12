@@ -1,0 +1,9 @@
+# Test file
+
+servers:
+    - exaple1: ["example1","ex1","e1"]
+
+messages:
+    error1: "error1"
+    error2: "error2"
+    error3: "error3"
