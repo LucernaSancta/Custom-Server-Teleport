@@ -12,8 +12,10 @@ import com.velocitypowered.api.command.CommandManager;
 import com.velocitypowered.api.command.CommandMeta;
 import com.velocitypowered.api.command.BrigadierCommand;
 
+import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.logger.slf4j.ComponentLogger;
+import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 
 import java.nio.file.Path;
 import java.util.List;
@@ -80,7 +82,10 @@ public class CustomServerTeleport {
 
     public void sendInfoMessage() {
         MiniMessage mm = MiniMessage.miniMessage();
-        logger.info(mm.deserialize("<gray><gradient:#3400e0:#cf28de>Custom server Teleport</gradient>"));
+        logger.info(mm.deserialize(
+                "<gray><gradient:#3400e0:#cf28de>Custom server Teleport</gradient> <version>",
+                Placeholder.component("version", Component.text(BuildConstants.VERSION))
+        ));
         logger.info(mm.deserialize("<gray>by</gray> Lucerna Sancta"));
     }
 }
