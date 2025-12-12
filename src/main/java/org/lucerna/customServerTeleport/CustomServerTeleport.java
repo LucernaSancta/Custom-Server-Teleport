@@ -15,9 +15,8 @@ import com.velocitypowered.api.command.BrigadierCommand;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.logger.slf4j.ComponentLogger;
 
-import org.slf4j.Logger;
-
 import java.nio.file.Path;
+import java.util.List;
 import java.util.Map;
 
 
@@ -45,28 +44,36 @@ public class CustomServerTeleport {
 
     @Subscribe
     public void onProxyInitialization(ProxyInitializeEvent event) {
-        // Initialize the config file when the server starts
-        config = configurationloader.getConfiguration();
 
+        // Initialize the config file when the server starts
         logger.info("Initializing plugin");
 
         CommandManager commandManager = proxy.getCommandManager();
-        // Here you can add meta for the command, as aliases and the plugin to which it belongs (RECOMMENDED)
-        CommandMeta commandMeta = commandManager.metaBuilder("test")
-                // This will create a new alias for the command "/test"
-                // with the same arguments and functionality
-                .aliases("otherAlias", "anotherAlias")
-                .plugin(this)
-                .build();
+        config = configurationloader.getConfiguration();
+        List<Map<String, Map<String, Object>>> serverList = (List<Map<String, Map<String, Object>>>) config.get("servers");
 
-        // You can replace this with "new EchoCommand()" or "new TestCommand()"
-        // SimpleCommand simpleCommand = new TestCommand();
-        // RawCommand rawCommand = new EchoCommand();
-        // The registration is done in the same way, since all 3 interfaces implement "Command"
-        BrigadierCommand commandToRegister = CommandsEgg.createBrigadierCommand(proxy, "test", "comm.test", "servername");
+        for (Map<String, Map<String, Object>> server : serverList) {
+            for (Map.Entry<String, Map<String, Object>> entry : server.entrySet()) {
+                String serverName = entry.getKey();
+                Map<String, Object> details = entry.getValue();
 
-        // Finally, you can register the command
-        commandManager.register(commandMeta, commandToRegister);
+                // Extract commands and permission
+                List<String> commands = (List<String>) details.get("commands");
+                String permission = (String) details.get("permission");
+
+                // Here you can add meta for the command, as aliases and the plugin to which it belongs
+                CommandMeta commandMeta = commandManager.metaBuilder(commands.get(0))
+
+                        .aliases(commands.subList(1, commands.size()).toArray(new String[0]))
+                        .plugin(this)
+                        .build();
+
+                BrigadierCommand commandToRegister = CommandsEgg.createBrigadierCommand(proxy, commands.get(0), permission, serverName);
+
+                // Finally, you can register the command
+                commandManager.register(commandMeta, commandToRegister);
+            }
+        }
 
         this.sendInfoMessage();
     }
