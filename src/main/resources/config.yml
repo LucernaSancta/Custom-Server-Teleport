@@ -1,9 +1,6 @@
-# Test file
+# Custom Server Teleport
 
+# Add here the servers you want to access followed by the custom commands
 servers:
-    - exaple1: ["example1","ex1","e1"]
-
-messages:
-    error1: "error1"
-    error2: "error2"
-    error3: "error3"
+    #- example: ["example","ex"]
+    - hub: ["hub","lobby","l"]
