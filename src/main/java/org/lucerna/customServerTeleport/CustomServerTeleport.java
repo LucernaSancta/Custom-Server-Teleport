@@ -12,10 +12,14 @@ import com.velocitypowered.api.command.CommandManager;
 import com.velocitypowered.api.command.CommandMeta;
 import com.velocitypowered.api.command.BrigadierCommand;
 
+import net.kyori.adventure.text.minimessage.MiniMessage;
+import net.kyori.adventure.text.logger.slf4j.ComponentLogger;
+
 import org.slf4j.Logger;
 
 import java.nio.file.Path;
 import java.util.Map;
+
 
 @Plugin(
         id = "custom_server_teleport",
@@ -26,14 +30,14 @@ import java.util.Map;
         authors = {"LucernaSancta"}
 )
 public class CustomServerTeleport {
-    private final Logger logger;
+    private final ComponentLogger logger;
     private final ProxyServer proxy;
     private final ConfigurationLoader configurationloader;
 
     private Map<String, Object> config;
 
     @Inject
-    public CustomServerTeleport(ProxyServer server, Logger logger, @DataDirectory Path dataDirectory) {
+    public CustomServerTeleport(ProxyServer server, ComponentLogger logger, @DataDirectory Path dataDirectory) {
         this.proxy = server;
         this.logger = logger;
         this.configurationloader = new ConfigurationLoader(logger, dataDirectory);
@@ -44,10 +48,7 @@ public class CustomServerTeleport {
         // Initialize the config file when the server starts
         config = configurationloader.getConfiguration();
 
-        logger.info(config.toString());
-        // Log loaded config values to confirm it's working
-        logger.info("Loaded servers: " + config.get("servers"));
-        logger.info("Plugin initialized successfully.");
+        logger.info("Initializing plugin");
 
         CommandManager commandManager = proxy.getCommandManager();
         // Here you can add meta for the command, as aliases and the plugin to which it belongs (RECOMMENDED)
@@ -66,6 +67,13 @@ public class CustomServerTeleport {
 
         // Finally, you can register the command
         commandManager.register(commandMeta, commandToRegister);
+
+        this.sendInfoMessage();
     }
 
+    public void sendInfoMessage() {
+        MiniMessage mm = MiniMessage.miniMessage();
+        logger.info(mm.deserialize("<gray><gradient:#3400e0:#cf28de>Custom server Teleport</gradient>"));
+        logger.info(mm.deserialize("<gray>by</gray> Lucerna Sancta"));
+    }
 }
