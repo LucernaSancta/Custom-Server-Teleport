@@ -3,9 +3,9 @@ package org.lucerna.customServerTeleport;
 import com.google.inject.Inject;
 
 import com.velocitypowered.api.plugin.annotation.DataDirectory;
+import com.velocitypowered.api.plugin.Plugin;
 import com.velocitypowered.api.event.proxy.ProxyInitializeEvent;
 import com.velocitypowered.api.event.Subscribe;
-import com.velocitypowered.api.plugin.Plugin;
 import com.velocitypowered.api.proxy.ProxyServer;
 
 import com.velocitypowered.api.command.CommandManager;
@@ -47,45 +47,50 @@ public class CustomServerTeleport {
     @Subscribe
     public void onProxyInitialization(ProxyInitializeEvent event) {
 
-        // Initialize the config file when the server starts
         logger.info("Initializing plugin");
 
         CommandManager commandManager = proxy.getCommandManager();
+
+        // Initialize the config file and get server list
         config = configurationloader.getConfiguration();
         List<Map<String, Map<String, Object>>> serverList = (List<Map<String, Map<String, Object>>>) config.get("servers");
 
+        logger.info(serverList.toString());
+        // For every server in the server list
         for (Map<String, Map<String, Object>> server : serverList) {
-            for (Map.Entry<String, Map<String, Object>> entry : server.entrySet()) {
-                String serverName = entry.getKey();
-                Map<String, Object> details = entry.getValue();
 
-                // Extract commands and permission
-                List<String> commands = (List<String>) details.get("commands");
-                String permission = (String) details.get("permission");
+            // Get first (end only) entry of the set
+            Map.Entry<String, Map<String, Object>> entry = server.entrySet().iterator().next();
+            String serverName = entry.getKey();
+            Map<String, Object> details = entry.getValue();
 
-                // Here you can add meta for the command, as aliases and the plugin to which it belongs
-                CommandMeta commandMeta = commandManager.metaBuilder(commands.get(0))
+            // Extract commands and permission
+            List<String> commands = (List<String>) details.get("commands");
+            String permission = (String) details.get("permission");
 
-                        .aliases(commands.subList(1, commands.size()).toArray(new String[0]))
-                        .plugin(this)
-                        .build();
+            // Create command meta with aliases (if any)
+            CommandMeta commandMeta = commandManager.metaBuilder(commands.get(0))
+                    .aliases(commands.subList(1, commands.size()).toArray(new String[0]))
+                    .plugin(this)
+                    .build();
 
-                BrigadierCommand commandToRegister = CommandsEgg.createBrigadierCommand(proxy, commands.get(0), permission, serverName);
+            // Create the Brigadier command
+            BrigadierCommand commandToRegister = CommandsEgg.createBrigadierCommand(proxy, commands.get(0), permission, serverName);
 
-                // Finally, you can register the command
-                commandManager.register(commandMeta, commandToRegister);
-            }
+            // Finally, register the command
+            commandManager.register(commandMeta, commandToRegister);
         }
 
         this.sendInfoMessage();
     }
 
     public void sendInfoMessage() {
+        // Init MiniMessage
         MiniMessage mm = MiniMessage.miniMessage();
+        // Plugin name and version
         logger.info(mm.deserialize(
                 "<gray><gradient:#3400e0:#cf28de>Custom server Teleport</gradient> <version>",
                 Placeholder.component("version", Component.text(BuildConstants.VERSION))
         ));
-        logger.info(mm.deserialize("<gray>by</gray> Lucerna Sancta"));
     }
 }

@@ -21,6 +21,7 @@ public class ConfigurationLoader {
     private Map<String, Object> configuration;
 
     public ConfigurationLoader(Logger logger, Path dataDirectory) {
+        // Ensure this is the only instance
         assert instance == null;
         instance = this;
 
@@ -52,12 +53,15 @@ public class ConfigurationLoader {
 
         // Load the config.yml file from the dataDirectory
         File configurationFile = dataDirectory.resolve("config.yml").toFile();
+
+        // Create the config.yml file if it does not exist
         if (!configurationFile.exists()) {
-            logger.info("Configuration file not found, creating it: {}", configurationFile.getAbsolutePath());
+            logger.warn("Configuration file not found, creating it: {}", configurationFile.getAbsolutePath());
             try (InputStream in = getClass().getResourceAsStream("/config.yml")) {
                 if (in != null) {
                     Files.copy(in, configurationFile.toPath());
                 } else {
+                    // Fucking hell, resource not found
                     throw new FileNotFoundException("config.yml not found in resources");
                 }
             } catch (IOException e) {
@@ -66,6 +70,7 @@ public class ConfigurationLoader {
             }
         }
 
+        // Load the config.yml file
         try {
             Yaml yaml = new Yaml();
             try (InputStream is = new FileInputStream(configurationFile)) {
