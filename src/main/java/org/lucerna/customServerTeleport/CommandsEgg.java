@@ -21,7 +21,7 @@ public final class CommandsEgg {
             final String servername
             ) {
 
-        LiteralCommandNode<CommandSource> customCommand = BrigadierCommand.literalArgumentBuilder(command)
+        LiteralCommandNode<CommandSource> rootNode = BrigadierCommand.literalArgumentBuilder(command)
                 .requires(source -> source.hasPermission(permission))
                 .executes(context -> {
                     // Get the subject that executed the command
@@ -60,6 +60,6 @@ public final class CommandsEgg {
                 .build();
 
         // Return BrigadierCommand "egg"
-        return new BrigadierCommand(customCommand);
+        return new BrigadierCommand(rootNode);
     }
 }

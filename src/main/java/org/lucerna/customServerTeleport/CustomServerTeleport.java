@@ -49,13 +49,20 @@ public class CustomServerTeleport {
 
         logger.info("Initializing plugin");
 
-        CommandManager commandManager = proxy.getCommandManager();
 
         // Initialize the config file and get server list
         config = configurationloader.getConfiguration();
+
+        this.initializeCommand();
+        this.registerCustomCommands();
+        this.sendInfoMessage();
+    }
+
+    private void registerCustomCommands() {
+        CommandManager commandManager = proxy.getCommandManager();
+
         List<Map<String, Map<String, Object>>> serverList = (List<Map<String, Map<String, Object>>>) config.get("servers");
 
-        logger.info(serverList.toString());
         // For every server in the server list
         for (Map<String, Map<String, Object>> server : serverList) {
 
@@ -80,11 +87,9 @@ public class CustomServerTeleport {
             // Finally, register the command
             commandManager.register(commandMeta, commandToRegister);
         }
-
-        this.sendInfoMessage();
     }
 
-    public void sendInfoMessage() {
+    private void sendInfoMessage() {
         // Init MiniMessage
         MiniMessage mm = MiniMessage.miniMessage();
         // Plugin name and version
@@ -92,5 +97,12 @@ public class CustomServerTeleport {
                 "<gray><gradient:#3400e0:#cf28de>Custom server Teleport</gradient> <version>",
                 Placeholder.component("version", Component.text(BuildConstants.VERSION))
         ));
+    }
+
+    private void initializeCommand() {
+        CommandManager commandManager = proxy.getCommandManager();
+        CustomServerTeleportCommand customserverteleportcommand = new CustomServerTeleportCommand(logger, configurationloader);
+        BrigadierCommand commandToRegister = customserverteleportcommand.createBrigadierCommand();
+        commandManager.register(customserverteleportcommand.getCommandMeta(commandManager, this), commandToRegister);
     }
 }
