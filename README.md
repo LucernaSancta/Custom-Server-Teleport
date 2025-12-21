@@ -11,8 +11,8 @@ This plugin also adds **custom permissions** for the commands used to access the
 
 
 > [!IMPORTANT]  
-> This plugin is written with the ass, there is no check for server of commands validity
-> use it at your own risk
+> This plugin is still in development, bugs are expected, please report them at
+> [github.com/LucernaSancta/Custom-Server-Teleport/issues](https://github.com/LucernaSancta/Custom-Server-Teleport/issues)
 
 ---
 
