@@ -2,7 +2,7 @@
 
 ![GitHub release (latest by date)](https://img.shields.io/github/v/release/LucernaSancta/Custom-Server-Teleport)
 [![Custom-Server-Teleport](https://img.shields.io/hangar/dt/Custom-Server-Teleport?link=https%3A%2F%2Fhangar.papermc.io%2FLucernaSancta%2FCustom-Server-Teleport&style=flat)](https://hangar.papermc.io/LucernaSancta/Custom-Server-Teleport)
-![License: MIT](https://img.shields.io/badge/License-MIT-greeb.svg)
+![GitHub License](https://img.shields.io/github/license/LucernaSancta/Custom-Server-Teleport?color=green)
 [![Custom-Server-Teleport](https://img.shields.io/hangar/views/Custom-Server-Teleport?link=https%3A%2F%2Fhangar.papermc.io%2FLucernaSancta%2FCustom-Server-Teleport&style=flat)](https://hangar.papermc.io/LucernaSancta/Custom-Server-Teleport)
 
 A simple Minecraft **Velocity** plugin that registers **custom commands** to access servers replacing the need to use the `/server` command.
