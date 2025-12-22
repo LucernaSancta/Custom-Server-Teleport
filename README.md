@@ -5,6 +5,8 @@
 ![GitHub License](https://img.shields.io/github/license/LucernaSancta/Custom-Server-Teleport?color=green)
 [![Custom-Server-Teleport](https://img.shields.io/hangar/views/Custom-Server-Teleport?link=https%3A%2F%2Fhangar.papermc.io%2FLucernaSancta%2FCustom-Server-Teleport&style=flat)](https://hangar.papermc.io/LucernaSancta/Custom-Server-Teleport)
 
+###### Download and views badges are referred to the [Velocity Hangar](https://hangar.papermc.io/LucernaSancta/Custom-Server-Teleport)
+
 A simple Minecraft **Velocity** plugin that registers **custom commands** to access servers replacing the need to use the `/server` command.
 
 This plugin also adds **custom permissions** for the commands used to access the servers
@@ -20,7 +22,7 @@ This plugin also adds **custom permissions** for the commands used to access the
 
 You can configure the plugin after the first run in the `config.yml`
 
-```yml
+```yaml
 # Default config
 servers:
     #- example:
