@@ -66,16 +66,16 @@ public class CustomServerTeleport {
     private void registerCustomCommands() {
         CommandManager commandManager = proxy.getCommandManager();
 
-        List<Map<String, Map<String, Object>>> serverList = (List<Map<String, Map<String, Object>>>) config.get("servers");
+        List<Map<String, Object>> serverList = (List<Map<String, Object>>) config.get("servers");
 
         // For every server in the server list
         command_registration_loop:
-        for (Map<String, Map<String, Object>> server : serverList) {
+        for (Map<String, Object> server : serverList) {
 
             // Get first (end only) entry of the set
-            Map.Entry<String, Map<String, Object>> entry = server.entrySet().iterator().next();
+            Map.Entry<String, Object> entry = server.entrySet().iterator().next();
             String serverName = entry.getKey();
-            Map<String, Object> details = entry.getValue();
+            Map<String, Object> details = (Map<String, Object>) entry.getValue();
 
             // Extract commands and permission
             List<String> commands = (List<String>) details.get("commands");
