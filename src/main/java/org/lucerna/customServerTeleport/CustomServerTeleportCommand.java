@@ -12,16 +12,15 @@ import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.Component;
 import org.slf4j.Logger;
 
-import java.time.Duration;
 
 public class CustomServerTeleportCommand {
     private static final String COMMAND_NAME = "customserverteleport";
     private final Logger logger;
-    private final ConfigurationLoader configurationLoader;
+    private final CustomServerTeleport customServerTeleport;
 
-    public CustomServerTeleportCommand(Logger logger, ConfigurationLoader configurationLoader) {
+    public CustomServerTeleportCommand(Logger logger, CustomServerTeleport customServerTeleport) {
         this.logger = logger;
-        this.configurationLoader = configurationLoader;
+        this.customServerTeleport = customServerTeleport;
     }
 
     public BrigadierCommand createBrigadierCommand() {
@@ -50,22 +49,17 @@ public class CustomServerTeleportCommand {
 
     private int executeReload(CommandContext<CommandSource> context) {
         CommandSource source = context.getSource();
-        // FIXME: Only the configuration is reloaded but not the commands! (Is there a way to "unregister" the old commands?)
-        if (configurationLoader.reload()) {
-            source.sendMessage(Component.text("Configuration reloaded correctly"));
-        } else {
-            source.sendMessage(Component.text("Error while reloading the configuration", NamedTextColor.RED));
-        }
+
+        customServerTeleport.reloadCustomCommands();
 
         // Only if the source is a player (a.k. not the console) send the log to the console
         if (source instanceof Player) {
-            if (configurationLoader.reload()) {
-                logger.info("Configuration reloaded correctly");
-            } else {
-                logger.error("Error while reloading the configuration");
-            }
+            Component message = Component.text("Configuration reloaded correctly", NamedTextColor.GREEN);
+            source.sendMessage(message);
         }
 
-        return Command.SINGLE_SUCCESS;
+        logger.info("Configuration reloaded correctly");
+
+    return Command.SINGLE_SUCCESS;
     }
 }

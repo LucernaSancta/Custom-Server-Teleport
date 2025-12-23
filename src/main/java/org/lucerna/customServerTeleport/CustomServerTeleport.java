@@ -18,8 +18,10 @@ import net.kyori.adventure.text.logger.slf4j.ComponentLogger;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 
 import java.nio.file.Path;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+
+
+// TODO: Refactor ALL messages; make them custom and set proper logic for sending only to source (when source is console) or also to the console
 
 
 @Plugin(
@@ -33,9 +35,10 @@ import java.util.Map;
 public class CustomServerTeleport {
     private final ComponentLogger logger;
     private final ProxyServer proxy;
-    private final ConfigurationLoader configurationloader;
+    public final ConfigurationLoader configurationloader;
 
     private Map<String, Object> config;
+    private List<String> command_list;
 
     @Inject
     public CustomServerTeleport(ProxyServer server, ComponentLogger logger, @DataDirectory Path dataDirectory) {
@@ -52,6 +55,8 @@ public class CustomServerTeleport {
 
         // Initialize the config file and get server list
         config = configurationloader.getConfiguration();
+
+        this.command_list = new ArrayList<String>();
 
         this.initializeCommand();
         this.registerCustomCommands();
@@ -74,19 +79,24 @@ public class CustomServerTeleport {
 
             // Extract commands and permission
             List<String> commands = (List<String>) details.get("commands");
+
+            String main_command = commands.get(0);
             String[] aliases = commands.subList(1, commands.size()).toArray(new String[0]);
             String permission = (String) details.get("permission");
 
             // Check if commands are already registered
             for (String command : commands) {
                 if (commandManager.hasCommand(command)) {
-                    logger.error("Command '" + command + "' is already used somewhere else");
+                    logger.error("Command '{}' is already used somewhere else", command);
                     continue command_registration_loop;
                 }
             }
 
+            // Add command to the command list so that it can be unregistered on reload
+            command_list.addAll(commands);
+
             // Create command meta with aliases (if any)
-            CommandMeta commandMeta = commandManager.metaBuilder(commands.get(0))
+            CommandMeta commandMeta = commandManager.metaBuilder(main_command)
                     .aliases(aliases)
                     .plugin(this)
                     .build();
@@ -97,6 +107,31 @@ public class CustomServerTeleport {
             // Finally, register the command
             commandManager.register(commandMeta, commandToRegister);
         }
+    }
+
+    private void unRegisterCustomCommands() {
+        logger.warn("Unregistering commands...");
+
+        CommandManager commandManager = proxy.getCommandManager();
+
+        // Unregister all commands
+        for (String command : command_list) {
+            commandManager.unregister(command);
+        }
+
+        // Remove all item from the command list (since no command is registered)
+        command_list.clear();
+    }
+
+    public void reloadCustomCommands() {
+
+        this.unRegisterCustomCommands();
+
+        // Reload the config and get the new one
+        configurationloader.reload();
+        config = configurationloader.getConfiguration();
+
+        this.registerCustomCommands();
     }
 
     private void sendInfoMessage() {
@@ -111,7 +146,7 @@ public class CustomServerTeleport {
 
     private void initializeCommand() {
         CommandManager commandManager = proxy.getCommandManager();
-        CustomServerTeleportCommand customserverteleportcommand = new CustomServerTeleportCommand(logger, configurationloader);
+        CustomServerTeleportCommand customserverteleportcommand = new CustomServerTeleportCommand(logger, this);
         BrigadierCommand commandToRegister = customserverteleportcommand.createBrigadierCommand();
         commandManager.register(customserverteleportcommand.getCommandMeta(commandManager, this), commandToRegister);
     }
