@@ -64,6 +64,7 @@ public class CustomServerTeleport {
         List<Map<String, Map<String, Object>>> serverList = (List<Map<String, Map<String, Object>>>) config.get("servers");
 
         // For every server in the server list
+        command_registration_loop:
         for (Map<String, Map<String, Object>> server : serverList) {
 
             // Get first (end only) entry of the set
@@ -73,11 +74,20 @@ public class CustomServerTeleport {
 
             // Extract commands and permission
             List<String> commands = (List<String>) details.get("commands");
+            String[] aliases = commands.subList(1, commands.size()).toArray(new String[0]);
             String permission = (String) details.get("permission");
+
+            // Check if commands are already registered
+            for (String command : commands) {
+                if (commandManager.hasCommand(command)) {
+                    logger.error("Command '" + command + "' is already used somewhere else");
+                    continue command_registration_loop;
+                }
+            }
 
             // Create command meta with aliases (if any)
             CommandMeta commandMeta = commandManager.metaBuilder(commands.get(0))
-                    .aliases(commands.subList(1, commands.size()).toArray(new String[0]))
+                    .aliases(aliases)
                     .plugin(this)
                     .build();
 

@@ -42,7 +42,7 @@ public final class CommandsEgg {
                         proxy.getServer(servername).ifPresent(targetServer -> {
                             // Attempt to connect the player to the target server
                             player.createConnectionRequest(targetServer).connect().thenAccept(success -> {
-                                // Check if NOT successful 
+                                // Check if NOT successful
                                 if (!success.isSuccessful()) {
                                     player.sendMessage(Component.text("Failed to connect to the server", NamedTextColor.RED));
                                 }
