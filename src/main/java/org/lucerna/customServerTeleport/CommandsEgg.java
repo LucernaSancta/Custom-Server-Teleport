@@ -9,8 +9,6 @@ import com.velocitypowered.api.command.CommandSource;
 import com.velocitypowered.api.proxy.Player;
 import com.velocitypowered.api.proxy.ProxyServer;
 
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
 
 public class CommandsEgg {
 
@@ -19,7 +17,9 @@ public class CommandsEgg {
         final MessageManager msg,
         final String command,
         final String permission,
-        final String servername
+        final String servername,
+        final String send_message,
+        final String enter_message
         ) {
 
         LiteralCommandNode<CommandSource> rootNode = BrigadierCommand.literalArgumentBuilder(command)
@@ -34,8 +34,9 @@ public class CommandsEgg {
                 } else {
                     Player player = (Player) source;
 
-                    // TODO: Custom message from config
-                    msg.send(player, MessageManager.SOURCE_ONLY, "<aqua>Trying to send to </aqua><green>{}</green>", servername);
+                    // Send initial message (send_message in config)
+                    msg.send(player, MessageManager.SOURCE_ONLY,
+                            send_message.replace("%servername%", servername).replace("%playername%", player.getUsername()));
 
                     // Get the server object by name
                     proxy.getServer(servername).ifPresent(targetServer -> {
@@ -48,8 +49,9 @@ public class CommandsEgg {
                                 msg.send(player, MessageManager.SOURCE_AND_CONSOLE_ERROR, "<red>Failed to connect to server {}</red>", servername);
 
                             } else {
-                                // TODO: Custom message from config
-                                msg.send(player, MessageManager.SOURCE_ONLY, "<aqua>Successfully sent to </aqua><green>{}</green>", servername);
+                                // Send final message (enter_message in config)
+                                msg.send(player, MessageManager.SOURCE_ONLY,
+                                        enter_message.replace("%servername%", servername).replace("%playername%", player.getUsername()));
                             }
 
                         // TODO: Custom messages from config
