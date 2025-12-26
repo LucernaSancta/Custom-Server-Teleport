@@ -2,6 +2,7 @@ package org.lucerna.customServerTeleport;
 
 import com.velocitypowered.api.command.CommandSource;
 
+import com.velocitypowered.api.proxy.Player;
 import net.kyori.adventure.text.logger.slf4j.ComponentLogger;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
@@ -52,7 +53,11 @@ public class MessageManager {
             // Deserialize minimessage
             Component component = deserialize(message);
 
-            source.sendMessage(component);
+            // Only if the source is a player OR if the source IS the console but
+            // the message WILL NOT be logged with the logger (a.k.a. SOURCE_ONLY)
+            if ((source instanceof Player) || (option == SOURCE_ONLY)) {
+                source.sendMessage(component);
+            }
 
             // Send to console, somehow
             switch (option) {

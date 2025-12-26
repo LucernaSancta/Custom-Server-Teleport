@@ -49,9 +49,8 @@ public class CustomServerTeleportCommand {
         customServerTeleport.reloadCustomCommands();
 
         // Only if the source is a player (a.k. not the console) send the log to the console
-        if (source instanceof Player) {
-            msg.send(source, MessageManager.SOURCE_AND_CONSOLE_INFO, "<green>Configuration reloaded correctly</green>");
-        }
+        msg.send(source, MessageManager.SOURCE_AND_CONSOLE_INFO, "<green>Configuration reloaded correctly</green>");
+
 
     return Command.SINGLE_SUCCESS;
     }
