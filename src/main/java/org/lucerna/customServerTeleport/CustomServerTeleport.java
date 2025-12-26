@@ -101,7 +101,7 @@ public class CustomServerTeleport {
                     .build();
 
             // Create the Brigadier command
-            BrigadierCommand commandToRegister = CommandsEgg.createBrigadierCommand(proxy, commands.get(0), permission, serverName);
+            BrigadierCommand commandToRegister = CommandsEgg.createBrigadierCommand(proxy, msg, commands.get(0), permission, serverName);
 
             // Finally, register the command
             commandManager.register(commandMeta, commandToRegister);
@@ -142,7 +142,7 @@ public class CustomServerTeleport {
 
     private void initializeCommand() {
         CommandManager commandManager = proxy.getCommandManager();
-        CustomServerTeleportCommand customserverteleportcommand = new CustomServerTeleportCommand(logger, this);
+        CustomServerTeleportCommand customserverteleportcommand = new CustomServerTeleportCommand(msg, this);
         BrigadierCommand commandToRegister = customserverteleportcommand.createBrigadierCommand();
         commandManager.register(customserverteleportcommand.getCommandMeta(commandManager, this), commandToRegister);
     }

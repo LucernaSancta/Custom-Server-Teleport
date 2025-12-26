@@ -12,10 +12,10 @@ public class MessageManager {
 
     public final MiniMessage mm;
 
-    public final int SOURCE_ONLY = 1;
-    public final int SOURCE_AND_CONSOLE_INFO = 2;
-    public final int SOURCE_AND_CONSOLE_WARN = 3;
-    public final int SOURCE_AND_CONSOLE_ERROR = 4;
+    public static final int SOURCE_ONLY = 1;
+    public static final int SOURCE_AND_CONSOLE_INFO = 2;
+    public static final int SOURCE_AND_CONSOLE_WARN = 3;
+    public static final int SOURCE_AND_CONSOLE_ERROR = 4;
 
 
     public MessageManager(ComponentLogger logger) {
@@ -40,7 +40,7 @@ public class MessageManager {
         return mm.deserialize(message);
     }
 
-    public void call(CommandSource source, int option, String message, String... args) {
+    public void send(CommandSource source, int option, String message, String... args) {
         // If is NOT blank
         if (!message.isBlank()) {
 

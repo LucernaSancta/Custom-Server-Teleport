@@ -16,6 +16,7 @@ public class CommandsEgg {
 
     public static BrigadierCommand createBrigadierCommand(
         final ProxyServer proxy,
+        final MessageManager msg,
         final String command,
         final String permission,
         final String servername
@@ -29,13 +30,12 @@ public class CommandsEgg {
 
                 // If source IS NOT a player
                 if (!(source instanceof Player)) {
-                    Component message = Component.text("This command can only be executed by a player!", NamedTextColor.RED);
-                    source.sendMessage(message);
+                    msg.send(source, MessageManager.SOURCE_ONLY, "<red>This command can only be executed by a player!</red>");
                 } else {
                     Player player = (Player) source;
 
                     // TODO: Custom message from config
-                    source.sendMessage(Component.text("Trying to send to " + servername, NamedTextColor.AQUA));
+                    msg.send(player, MessageManager.SOURCE_ONLY, "<aqua>Trying to send to </aqua><green>{}</green>", servername);
 
                     // Get the server object by name
                     proxy.getServer(servername).ifPresent(targetServer -> {
@@ -45,16 +45,16 @@ public class CommandsEgg {
 
                             // Check if NOT successful
                             if (!success.isSuccessful()) {
-                                player.sendMessage(Component.text("Failed to connect to the server", NamedTextColor.RED));
+                                msg.send(player, MessageManager.SOURCE_AND_CONSOLE_ERROR, "<red>Failed to connect to server {}</red>", servername);
 
                             } else {
                                 // TODO: Custom message from config
-                                source.sendMessage(Component.text("Successfully sent to " + servername, NamedTextColor.AQUA));
+                                msg.send(player, MessageManager.SOURCE_ONLY, "<aqua>Successfully sent to </aqua><green>{}</green>", servername);
                             }
 
                         // TODO: Custom messages from config
                         }).exceptionally(throwable -> {
-                            player.sendMessage(Component.text("Error occurred while trying to send you to the server", NamedTextColor.RED));
+                            msg.send(source, MessageManager.SOURCE_ONLY, "<red>Error occurred while trying to send you to the server</red>");
                             return null;
                         });
                     });

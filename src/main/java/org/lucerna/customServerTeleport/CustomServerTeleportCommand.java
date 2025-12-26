@@ -8,18 +8,15 @@ import com.velocitypowered.api.command.CommandManager;
 import com.velocitypowered.api.command.CommandMeta;
 import com.velocitypowered.api.command.CommandSource;
 import com.velocitypowered.api.proxy.Player;
-import net.kyori.adventure.text.format.NamedTextColor;
-import net.kyori.adventure.text.Component;
-import org.slf4j.Logger;
 
 
 public class CustomServerTeleportCommand {
     private static final String COMMAND_NAME = "customserverteleport";
-    private final Logger logger;
+    private final MessageManager msg;
     private final CustomServerTeleport customServerTeleport;
 
-    public CustomServerTeleportCommand(Logger logger, CustomServerTeleport customServerTeleport) {
-        this.logger = logger;
+    public CustomServerTeleportCommand(MessageManager msg, CustomServerTeleport customServerTeleport) {
+        this.msg = msg;
         this.customServerTeleport = customServerTeleport;
     }
 
@@ -42,8 +39,7 @@ public class CustomServerTeleportCommand {
     }
 
     private int executeHelp(CommandContext<CommandSource> context) {
-        Component message = Component.text("/" + COMMAND_NAME + " <help|reload>");
-        context.getSource().sendMessage(message);
+        msg.send(context.getSource(), MessageManager.SOURCE_ONLY, "/{} <help|reload>", COMMAND_NAME);
         return Command.SINGLE_SUCCESS;
     }
 
@@ -54,11 +50,8 @@ public class CustomServerTeleportCommand {
 
         // Only if the source is a player (a.k. not the console) send the log to the console
         if (source instanceof Player) {
-            Component message = Component.text("Configuration reloaded correctly", NamedTextColor.GREEN);
-            source.sendMessage(message);
+            msg.send(source, MessageManager.SOURCE_AND_CONSOLE_INFO, "<green>Configuration reloaded correctly</green>");
         }
-
-        logger.info("Configuration reloaded correctly");
 
     return Command.SINGLE_SUCCESS;
     }
