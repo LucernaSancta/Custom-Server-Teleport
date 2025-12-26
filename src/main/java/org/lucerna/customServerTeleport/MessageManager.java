@@ -1,6 +1,6 @@
 package org.lucerna.customServerTeleport;
 
-import com.velocitypowered.api.proxy.Player;
+import com.velocitypowered.api.command.CommandSource;
 
 import net.kyori.adventure.text.logger.slf4j.ComponentLogger;
 import net.kyori.adventure.text.Component;
@@ -12,10 +12,10 @@ public class MessageManager {
 
     public final MiniMessage mm;
 
-    public final int PLAYER_ONLY = 1;
-    public final int PLAYER_AND_CONSOLE_INFO = 2;
-    public final int PLAYER_AND_CONSOLE_WARN = 3;
-    public final int PLAYER_AND_CONSOLE_ERROR = 4;
+    public final int SOURCE_ONLY = 1;
+    public final int SOURCE_AND_CONSOLE_INFO = 2;
+    public final int SOURCE_AND_CONSOLE_WARN = 3;
+    public final int SOURCE_AND_CONSOLE_ERROR = 4;
 
 
     public MessageManager(ComponentLogger logger) {
@@ -40,7 +40,7 @@ public class MessageManager {
         return mm.deserialize(message);
     }
 
-    public void call(Player player, int option, String message, String... args) {
+    public void call(CommandSource source, int option, String message, String... args) {
         // If is NOT blank
         if (!message.isBlank()) {
 
@@ -52,19 +52,19 @@ public class MessageManager {
             // Deserialize minimessage
             Component component = deserialize(message);
 
-            player.sendMessage(component);
+            source.sendMessage(component);
 
             // Send to console, somehow
             switch (option) {
-                case PLAYER_ONLY:
+                case SOURCE_ONLY:
                     break;
-                case PLAYER_AND_CONSOLE_INFO:
+                case SOURCE_AND_CONSOLE_INFO:
                     logger.info(component);
                     break;
-                case PLAYER_AND_CONSOLE_WARN:
+                case SOURCE_AND_CONSOLE_WARN:
                     logger.warn(component);
                     break;
-                case PLAYER_AND_CONSOLE_ERROR:
+                case SOURCE_AND_CONSOLE_ERROR:
                     logger.error(component);
                     break;
             }
