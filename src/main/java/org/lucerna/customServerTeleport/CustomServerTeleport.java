@@ -12,10 +12,7 @@ import com.velocitypowered.api.command.CommandManager;
 import com.velocitypowered.api.command.CommandMeta;
 import com.velocitypowered.api.command.BrigadierCommand;
 
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.logger.slf4j.ComponentLogger;
-import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 
 import java.nio.file.Path;
 import java.util.*;
@@ -35,6 +32,7 @@ import java.util.*;
 public class CustomServerTeleport {
     private final ComponentLogger logger;
     private final ProxyServer proxy;
+    private final MessageManager msg;
     public final ConfigurationLoader configurationloader;
 
     private Map<String, Object> config;
@@ -44,6 +42,7 @@ public class CustomServerTeleport {
     public CustomServerTeleport(ProxyServer server, ComponentLogger logger, @DataDirectory Path dataDirectory) {
         this.proxy = server;
         this.logger = logger;
+        this.msg = new MessageManager(this.logger);
         this.configurationloader = new ConfigurationLoader(logger, dataDirectory);
     }
 
@@ -135,13 +134,10 @@ public class CustomServerTeleport {
     }
 
     private void sendInfoMessage() {
-        // Init MiniMessage
-        MiniMessage mm = MiniMessage.miniMessage();
         // Plugin name and version
-        logger.info(mm.deserialize(
-                "<gray><gradient:#3400e0:#cf28de>Custom server Teleport</gradient> <version>",
-                Placeholder.component("version", Component.text(BuildConstants.VERSION))
-        ));
+        logger.info(
+                msg.deserialize(msg.format(
+                "<gray><gradient:#3400e0:#cf28de>Custom server Teleport</gradient> {}", BuildConstants.VERSION)));
     }
 
     private void initializeCommand() {

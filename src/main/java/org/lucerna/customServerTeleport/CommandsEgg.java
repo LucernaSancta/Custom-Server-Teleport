@@ -12,7 +12,7 @@ import com.velocitypowered.api.proxy.ProxyServer;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 
-public final class CommandsEgg {
+public class CommandsEgg {
 
     public static BrigadierCommand createBrigadierCommand(
         final ProxyServer proxy,
