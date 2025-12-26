@@ -25,12 +25,16 @@ You can configure the plugin after the first run in the `config.yml`
 ```yaml
 # Default config
 servers:
-    #- example:
-    #    commands: ["example","ex"]
-    #    permission: "customcommand.example"
-    - hub:
-        commands: ["hub","lobby","l"]
-        permission: "customcommand.hub"
+  #- example:
+  #    commands: ["example","ex"]
+  #    permission: "customcommand.example"
+  #    send_message: "<aqua>Trying to send <green>%playername%</green> to </aqua><green>%servername%</green>"
+  #    enter_message: "<aqua>Successfully sent to </aqua><green>%servername%</green>"
+  - hub:
+      commands: ["hub","lobby","l"]
+      permission: "customcommand.hub"
+      send_message: "<aqua>Sending <green>%playername%</green> to </aqua><green>%servername%</green>"
+      enter_message: "" # Leave empty to disable the message
 ```
 
 ## Code utilization
