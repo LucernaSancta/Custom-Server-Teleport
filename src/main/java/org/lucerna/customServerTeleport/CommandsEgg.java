@@ -40,7 +40,7 @@ public class CommandsEgg {
 
                     // Check if available
                     if (target_server.isEmpty()) {
-                        msg.send(player, MessageManager.SOURCE_AND_CONSOLE_WARN, "<red>Server {} is not available!</red>", servername);
+                        msg.send(player, MessageManager.SOURCE_AND_CONSOLE_ERROR, "<red>Server {} is not available!</red>", servername);
                         return Command.SINGLE_SUCCESS;
                     }
 
@@ -62,10 +62,10 @@ public class CommandsEgg {
                                     send_message.replace("%servername%", servername).replace("%playername%", player.getUsername()));
 
                         } else {
-                            msg.send(player, MessageManager.SOURCE_AND_CONSOLE_WARN, "<gold>Server {} is offline!</gold>", servername);
+                            msg.send(player, MessageManager.SOURCE_AND_CONSOLE_WARN, "<yellow>Server {} is offline!</yellow>", servername);
                         }
                     }).exceptionally(throwable -> {
-                        msg.send(source, MessageManager.SOURCE_ONLY, "<red>Error occurred while trying to send you to the server</red>");
+                        msg.send(player, MessageManager.SOURCE_AND_CONSOLE_WARN, "<yellow>Server {} is offline!</yellow>", servername);
                         return null;
                     });
                 }
