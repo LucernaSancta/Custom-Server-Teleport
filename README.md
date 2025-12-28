@@ -35,6 +35,13 @@ servers:
       send_message: "" # Leave empty to disable the message
 ```
 
+### Placeholders
+
+There are currently only two supported placeholders for the `send_message` config:
+
+- __%playername%__ replaced with the name of the player executing the command
+- __%servername%__ replaced with the name of the target server 
+
 ## Reloading while running
 
 Use the `/customserverteleport reload` (or the alias `/cst reload`) command to reload the config file mid game
