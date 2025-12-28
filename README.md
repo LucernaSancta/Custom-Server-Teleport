@@ -35,6 +35,10 @@ servers:
       send_message: "" # Leave empty to disable the message
 ```
 
+## Reloading while running
+
+Use the `/customserverteleport reload` (or the alias `/cst reload`) command to reload the config file mid game
+
 ## Code utilization
 
 Some code in this repository comes from the [PterodactylPowerAction](https://github.com/Quozul/PterodactylPowerAction) plugin made by [Quozul](https://github.com/Quozul)
