@@ -79,9 +79,8 @@ public class CustomServerTeleport {
             // Extract commands and permission
             List<String> commands = (List<String>) details.get("commands");
 
-            // Extract custom messages
+            // Extract custom message
             String send_message = (String) details.get("send_message");
-            String enter_message = (String) details.get("enter_message");
 
             String main_command = commands.get(0);
             String[] aliases = commands.subList(1, commands.size()).toArray(new String[0]);
@@ -105,7 +104,7 @@ public class CustomServerTeleport {
                     .build();
 
             // Create the Brigadier command
-            BrigadierCommand commandToRegister = CommandsEgg.createBrigadierCommand(proxy, msg, commands.get(0), permission, serverName, send_message, enter_message);
+            BrigadierCommand commandToRegister = CommandsEgg.createBrigadierCommand(proxy, msg, commands.get(0), permission, serverName, send_message);
 
             // Finally, register the command
             commandManager.register(commandMeta, commandToRegister);

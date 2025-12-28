@@ -8,6 +8,9 @@ import com.velocitypowered.api.command.BrigadierCommand;
 import com.velocitypowered.api.command.CommandSource;
 import com.velocitypowered.api.proxy.Player;
 import com.velocitypowered.api.proxy.ProxyServer;
+import com.velocitypowered.api.proxy.server.RegisteredServer;
+
+import java.util.Optional;
 
 
 public class CommandsEgg {
@@ -18,8 +21,7 @@ public class CommandsEgg {
         final String command,
         final String permission,
         final String servername,
-        final String send_message,
-        final String enter_message
+        final String send_message
         ) {
 
         LiteralCommandNode<CommandSource> rootNode = BrigadierCommand.literalArgumentBuilder(command)
@@ -33,32 +35,38 @@ public class CommandsEgg {
                     msg.send(source, MessageManager.SOURCE_ONLY, "<red>This command can only be executed by a player!</red>");
                 } else {
                     Player player = (Player) source;
+                    Optional<RegisteredServer> target_server = proxy.getServer(servername);
 
-                    // Send initial message (send_message in config)
-                    msg.send(player, MessageManager.SOURCE_ONLY,
-                            send_message.replace("%servername%", servername).replace("%playername%", player.getUsername()));
 
-                    // Get the server object by name
-                    proxy.getServer(servername).ifPresent(targetServer -> {
+                    // Check if available
+                    if (target_server.isEmpty()) {
+                        msg.send(player, MessageManager.SOURCE_AND_CONSOLE_WARN, "<red>Server {} is not available!</red>", servername);
+                        return Command.SINGLE_SUCCESS;
+                    }
 
-                        // Attempt to connect the player to the target server
-                        player.createConnectionRequest(targetServer).connect().thenAccept(success -> {
+                    // Check if player is already on the lobby server
+                    if (player.getCurrentServer().isPresent() &&
+                            player.getCurrentServer().get().getServerInfo().getName().equals(servername)) {
+                        msg.send(player, MessageManager.SOURCE_ONLY, "<gold>You are already connected to this server!</gold>");
+                        return Command.SINGLE_SUCCESS;
+                    }
 
-                            // Check if NOT successful
-                            if (!success.isSuccessful()) {
-                                msg.send(player, MessageManager.SOURCE_AND_CONSOLE_ERROR, "<red>Failed to connect to server {}</red>", servername);
 
-                            } else {
-                                // Send final message (enter_message in config)
-                                msg.send(player, MessageManager.SOURCE_ONLY,
-                                        enter_message.replace("%servername%", servername).replace("%playername%", player.getUsername()));
-                            }
+                    // Connect player to lobby server
+                    target_server.get().ping().thenAccept(ping -> {
+                        if (ping != null) {
+                            player.createConnectionRequest(target_server.get()).fireAndForget();
 
-                        // TODO: Custom messages from config
-                        }).exceptionally(throwable -> {
-                            msg.send(source, MessageManager.SOURCE_ONLY, "<red>Error occurred while trying to send you to the server</red>");
-                            return null;
-                        });
+                            // Send message (send_message in config)
+                            msg.send(player, MessageManager.SOURCE_ONLY,
+                                    send_message.replace("%servername%", servername).replace("%playername%", player.getUsername()));
+
+                        } else {
+                            msg.send(player, MessageManager.SOURCE_AND_CONSOLE_WARN, "<gold>Server {} is offline!</gold>", servername);
+                        }
+                    }).exceptionally(throwable -> {
+                        msg.send(source, MessageManager.SOURCE_ONLY, "<red>Error occurred while trying to send you to the server</red>");
+                        return null;
                     });
                 }
                 // The execution was successful

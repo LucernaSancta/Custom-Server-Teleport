@@ -5,10 +5,8 @@ servers:
     #- example:
     #    commands: ["example","ex"]
     #    permission: "customcommand.example"
-    #    send_message: "<aqua>Trying to send <green>%playername%</green> to </aqua><green>%servername%</green>"
-    #    enter_message: "<aqua>Successfully sent to </aqua><green>%servername%</green>"
+    #    send_message: "<aqua>Sending <green>%playername%</green> to </aqua><green>%servername%</green>"
     - hub:
         commands: ["hub","lobby","l"]
         permission: "customcommand.hub"
-        send_message: "<aqua>Sending <green>%playername%</green> to </aqua><green>%servername%</green>"
-        enter_message: "" # Leave empty to disable the message
+        send_message: "" # Leave empty to disable the message
