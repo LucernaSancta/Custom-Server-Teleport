@@ -4,9 +4,13 @@ import com.google.inject.Inject;
 
 import com.velocitypowered.api.plugin.annotation.DataDirectory;
 import com.velocitypowered.api.plugin.Plugin;
+
 import com.velocitypowered.api.event.proxy.ProxyInitializeEvent;
+import com.velocitypowered.api.event.player.PlayerChooseInitialServerEvent;
 import com.velocitypowered.api.event.Subscribe;
+
 import com.velocitypowered.api.proxy.ProxyServer;
+import com.velocitypowered.api.proxy.Player;
 
 import com.velocitypowered.api.command.CommandManager;
 import com.velocitypowered.api.command.CommandMeta;
@@ -37,6 +41,7 @@ public class CustomServerTeleport {
 
     private Map<String, Object> config;
     private List<String> command_list;
+    private VersionChecker version_checker;
 
     @Inject
     public CustomServerTeleport(ProxyServer server, ComponentLogger logger, @DataDirectory Path dataDirectory) {
@@ -60,6 +65,22 @@ public class CustomServerTeleport {
         this.initializeCommand();
         this.registerCustomCommands();
         this.sendInfoMessage();
+
+        // Check for new versions and send message to console
+        this.version_checker = new VersionChecker(logger);
+    }
+
+    @Subscribe
+    public void onPlayerJoin(PlayerChooseInitialServerEvent event) {
+        if (this.version_checker.is_old) {
+            // Ther is a newwer version of the plugin and we need to notify the player
+            Player player = event.getPlayer();
+            if (player.hasPermission("customcommand.notify_update")) {
+                msg.send(player, MessageManager.SOURCE_ONLY,
+                        "<aqua>A new version (<yellow>" + this.version_checker.latestVersion + "</yellow>) of <green>Custom Server Teleport</green> is available! Please update your plugin.</aqua>"
+                );
+            }
+        }
     }
 
     private void registerCustomCommands() {
