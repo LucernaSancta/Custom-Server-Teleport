@@ -26,7 +26,7 @@ import java.util.*;
     name = "Custom Server Teleport",
     version = BuildConstants.VERSION,
     description = "A simple Velocity plugin to set custom commands and permission to switch server",
-    url = "github.com/LucernaSancta/Custom-Server-Teleport",
+    url = BuildConstants.REPO_URL + "/" + BuildConstants.REPO_NAME,
     authors = {"LucernaSancta"}
 )
 public class CustomServerTeleport {

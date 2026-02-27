@@ -5,9 +5,6 @@ plugins {
     id("xyz.jpenilla.run-velocity") version "2.3.1"
 }
 
-group = 'org.lucerna'
-version = '2.1.1'
-
 repositories {
     mavenCentral()
     maven {
@@ -26,7 +23,7 @@ tasks {
         // Configure the Velocity version for our task.
         // This is the only required configuration besides applying the plugin.
         // Your plugin's jar (or shadowJar if present) will be used automatically.
-        velocityVersion("3.4.0-SNAPSHOT")
+        velocityVersion("3.5.0-SNAPSHOT")
     }
 }
 
@@ -43,7 +40,12 @@ tasks.withType(JavaCompile).configureEach {
 def templateSource = file('src/main/templates')
 def templateDest = layout.buildDirectory.dir('generated/sources/templates')
 def generateTemplates = tasks.register('generateTemplates', Copy) { task ->
-    def props = ['version': project.version]
+    def props = [
+            'version': project.version,
+            'repo_name': project.repo_name,
+            'repo_url': project.repo_url,
+            'repo_api': project.repo_api
+    ]
     task.inputs.properties props
 
     task.from templateSource
