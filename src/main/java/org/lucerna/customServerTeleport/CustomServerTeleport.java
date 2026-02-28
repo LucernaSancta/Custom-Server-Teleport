@@ -67,7 +67,7 @@ public class CustomServerTeleport {
         this.sendInfoMessage();
 
         // Check for new versions and send message to console
-        this.version_checker = new VersionChecker(logger);
+        this.version_checker = new VersionChecker(logger, msg);
     }
 
     @Subscribe

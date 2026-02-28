@@ -12,13 +12,15 @@ import java.net.URL;
 
 public class VersionChecker {
     private final ComponentLogger logger;
+    private final MessageManager msg;
     private static final String GITHUB_API_URL = BuildConstants.REPO_API + "/repos/" + BuildConstants.REPO_NAME + "/releases/latest";
 
     public boolean is_old;
     public String latestVersion;
 
-    public VersionChecker(ComponentLogger logger) {
+    public VersionChecker(ComponentLogger logger, MessageManager msg) {
         this.logger = logger;
+        this.msg = msg;
         // True if this is an old version, false if it's the newest or if it couldn't check
         this.is_old = checkVersion();
     }
@@ -29,10 +31,13 @@ public class VersionChecker {
 
         if (latestVersion != null) {
             if (!latestVersion.equals(currentVersion)) {
-                logger.warn(Component.text("A new version (" + latestVersion + ") is available! Please update your plugin."));
+                logger.warn(
+                        msg.deserialize(msg.format(
+                                "A new version ({}) is available! Please update your plugin at {}/{}/releases", latestVersion, BuildConstants.REPO_URL, BuildConstants.REPO_NAME)));
+
                 return true;
             } else {
-                logger.info(Component.text("You are using the latest version: " + currentVersion));
+                logger.info(Component.text("You are using the latest version"));
                 return false;
             }
         } else {
