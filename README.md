@@ -46,6 +46,10 @@ There are currently only two supported placeholders for the `send_message` confi
 
 Use the `/customserverteleport reload` (or the alias `/cst reload`) command to reload the config file mid game
 
+## Notify updates
+
+Updates will be notified in the console at the start of the server or to any player having the `customcommand.notify_update` permission when they enter the server
+
 ## Code utilization
 
 Some code in this repository comes from the [PterodactylPowerAction](https://github.com/Quozul/PterodactylPowerAction) plugin made by [Quozul](https://github.com/Quozul)
