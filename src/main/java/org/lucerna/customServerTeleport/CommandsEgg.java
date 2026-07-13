@@ -58,15 +58,18 @@ public class CommandsEgg {
                 })
                 // Here the logic of the command with an argument
                 .executes(context -> {
-                    String argumentProvided = context.getArgument("player", String.class);
-                    // I want to puke, what the actual fuck is this unchecked shit.
-                    // Let's just pray to God that you don't try to execute this pile of shit
-                    // with a disconnected or non-existing player, if you do, fuck you.
-                    Player player_sent = proxy.getPlayer(argumentProvided).get();
-
+                    // Get the source
                     CommandSource source = context.getSource();
+                    // Get the player in the argument
+                    String argumentProvided = context.getArgument("player", String.class);
+                    Optional<Player> player_sent = proxy.getPlayer(argumentProvided);
+                    // Check if the player exists
+                    if (!player_sent.isPresent()) {
+                        msg.send(source, MessageManager.SOURCE_AND_CONSOLE_ERROR, "<red>The specified player {} does not exist.</red>", argumentProvided);
+                        return Command.SINGLE_SUCCESS;
+                    }
 
-                    return checkAndSend(source, player_sent, proxy, msg, servername, send_message);
+                    return checkAndSend(source, player_sent.get(), proxy, msg, servername, send_message);
                 })
             )
             // Build :)
