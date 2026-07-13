@@ -3,12 +3,15 @@
 package org.lucerna.customServerTeleport;
 
 import com.mojang.brigadier.Command;
+import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.tree.LiteralCommandNode;
 import com.velocitypowered.api.command.BrigadierCommand;
 import com.velocitypowered.api.command.CommandSource;
+import com.velocitypowered.api.command.VelocityBrigadierMessage;
 import com.velocitypowered.api.proxy.Player;
 import com.velocitypowered.api.proxy.ProxyServer;
 import com.velocitypowered.api.proxy.server.RegisteredServer;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 
 import java.util.Optional;
 
@@ -72,6 +75,22 @@ public class CommandsEgg {
                 // The execution was successful
                 return Command.SINGLE_SUCCESS;
             })
+            // If an argument is provided
+            .then(BrigadierCommand.requiredArgumentBuilder("player", StringArgumentType.word())
+                // Require the .others permission to perform this action
+                .requires(source -> source.hasPermission(permission+".others"))
+                // Suggest as argument the names of all connected players are provided
+                .suggests((ctx, builder) -> {
+                    for (Player player : proxy.getAllPlayers()) {
+                        builder.suggest(player.getUsername());
+                    }
+                    return builder.buildFuture();
+                })
+                // Here the logic of the command with an argument
+                .executes(context -> {
+                    return Command.SINGLE_SUCCESS;
+                })
+            )
             // Build :)
             .build();
 
