@@ -27,13 +27,16 @@ You can configure the plugin after the first run in the `config.yml`
 servers:
   #- example:
   #    commands: ["example","ex"]
-  #    permission: "customcommand.example"
-  #    send_message: "<aqua>sending <green>%playername%</green> to </aqua><green>%servername%</green>"
+  #    perm_suff: "example" # This will became "cst.server.example"
+  #    send_message: "<aqua>Sending <green>%playername%</green> to </aqua><green>%servername%</green>"
   - hub:
       commands: ["hub","lobby","l"]
-      permission: "customcommand.hub"
+      permission: "hub"
       send_message: "" # Leave empty to disable the message
 ```
+
+The permissions are created using the following pattern `cst.server.` + suffix specified in the config.
+So as for the example, the permission suffix in the config is **"example"** so the permission will be `cst.server.example`
 
 ### Placeholders
 
@@ -45,10 +48,20 @@ There are currently only two supported placeholders for the `send_message` confi
 ## Reloading while running
 
 Use the `/customserverteleport reload` (or the alias `/cst reload`) command to reload the config file mid game
+(requires the `cst.admin.use` permission)
 
 ## Notify updates
 
-Updates will be notified in the console at the start of the server or to any player having the `customcommand.notify_update` permission when they enter the server
+Updates will be notified in the console at the start of the server or to any player having the `cst.notify_update` permission when they enter the server
+
+## Permissions recap
+
+| Permission            | Action                                                    |
+|-----------------------|-----------------------------------------------------------|
+| `cst.admin.use`       | Use the **/cst** command                                  |
+| `cst.notify_update`   | **Recive notification** when an update is available       |
+| `cst.server.*`        | Use the commands to **access the servers**                |
+| `cst.server.*.others` | Use the commands to **send other players** to the servers |
 
 ## Code utilization
 
