@@ -1,4 +1,6 @@
-# Custom Server Teleport
+###########################################################
+#         Custom Server Teleport config.yml file          #
+###########################################################
 
 # Add here the servers you want to access followed by the custom commands
 servers:
