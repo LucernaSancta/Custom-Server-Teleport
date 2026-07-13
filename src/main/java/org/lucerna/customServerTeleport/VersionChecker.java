@@ -7,7 +7,7 @@ import net.kyori.adventure.text.logger.slf4j.ComponentLogger;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import java.net.URL;
+import java.net.URI;
 
 
 public class VersionChecker {
@@ -48,8 +48,8 @@ public class VersionChecker {
 
     private String getLatestVersion() {
         try {
-            URL url = new URL(GITHUB_API_URL);
-            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            URI uri = new URI(GITHUB_API_URL);
+            HttpURLConnection conn = (HttpURLConnection) uri.toURL().openConnection();
             conn.setRequestMethod("GET");
             conn.setRequestProperty("Accept", "application/vnd.github.v3+json");
             int responseCode = conn.getResponseCode();
