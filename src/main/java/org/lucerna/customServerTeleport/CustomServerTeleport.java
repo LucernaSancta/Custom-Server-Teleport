@@ -2,11 +2,12 @@ package org.lucerna.customServerTeleport;
 
 import com.google.inject.Inject;
 
+import com.velocitypowered.api.command.CommandSource;
+import com.velocitypowered.api.event.connection.PostLoginEvent;
 import com.velocitypowered.api.plugin.annotation.DataDirectory;
 import com.velocitypowered.api.plugin.Plugin;
 
 import com.velocitypowered.api.event.proxy.ProxyInitializeEvent;
-import com.velocitypowered.api.event.player.PlayerChooseInitialServerEvent;
 import com.velocitypowered.api.event.Subscribe;
 
 import com.velocitypowered.api.proxy.ProxyServer;
@@ -16,10 +17,13 @@ import com.velocitypowered.api.command.CommandManager;
 import com.velocitypowered.api.command.CommandMeta;
 import com.velocitypowered.api.command.BrigadierCommand;
 
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.logger.slf4j.ComponentLogger;
 
 import java.nio.file.Path;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 
 // TODO: Refactor ALL messages; make them custom and set proper logic for sending only to source (when source is console) or also to the console
@@ -71,15 +75,21 @@ public class CustomServerTeleport {
     }
 
     @Subscribe
-    public void onPlayerJoin(PlayerChooseInitialServerEvent event) {
+    public void onPostLogin(PostLoginEvent event) {
         if (this.version_checker.is_old) {
-            // Ther is a newwer version of the plugin and we need to notify the player
+
             Player player = event.getPlayer();
-            if (player.hasPermission("cst.notify_update")) {
-                msg.send(player, MessageManager.SOURCE_ONLY,
-                        "<aqua>A new version (<yellow>" + this.version_checker.latestVersion + "</yellow>) of <green>Custom Server Teleport</green> is available! Please update your plugin.</aqua>"
-                );
-            }
+            // Delay the execution
+            proxy.getScheduler().buildTask(this, () -> {
+                // Verify the player is active
+                if (!player.isActive()) return;
+
+                if (player.hasPermission("cst.notify_update")) {
+                    msg.send(player, MessageManager.SOURCE_ONLY,
+                            "<aqua>A new version (<yellow>" + this.version_checker.latestVersion + "</yellow>) of <green>Custom Server Teleport</green> is available! Please update your plugin.</aqua>"
+                    );
+                }
+            }).delay(1, TimeUnit.SECONDS).schedule(); // 1 second is usually right
         }
     }
 
