@@ -22,7 +22,7 @@ public class CustomServerTeleportCommand {
 
     public BrigadierCommand createBrigadierCommand() {
         LiteralCommandNode<CommandSource> rootNode = BrigadierCommand.literalArgumentBuilder(COMMAND_NAME)
-                .requires(source -> source.hasPermission(COMMAND_NAME + ".use"))
+                .requires(source -> source.hasPermission("cst.admin.use"))
                 .executes(this::executeHelp)
                 .then(BrigadierCommand.literalArgumentBuilder("help").executes(this::executeHelp))
                 .then(BrigadierCommand.literalArgumentBuilder("reload").executes(this::executeReload))

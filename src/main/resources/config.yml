@@ -6,9 +6,9 @@
 servers:
     #- example:
     #    commands: ["example","ex"]
-    #    permission: "customcommand.example"
+    #    permission: "example" # This will became "cst.server.example"
     #    send_message: "<aqua>Sending <green>%playername%</green> to </aqua><green>%servername%</green>"
     - hub:
         commands: ["hub","lobby","l"]
-        permission: "customcommand.hub"
+        permission: "hub"
         send_message: "" # Leave empty to disable the message

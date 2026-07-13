@@ -75,7 +75,7 @@ public class CustomServerTeleport {
         if (this.version_checker.is_old) {
             // Ther is a newwer version of the plugin and we need to notify the player
             Player player = event.getPlayer();
-            if (player.hasPermission("customcommand.notify_update")) {
+            if (player.hasPermission("cst.notify_update")) {
                 msg.send(player, MessageManager.SOURCE_ONLY,
                         "<aqua>A new version (<yellow>" + this.version_checker.latestVersion + "</yellow>) of <green>Custom Server Teleport</green> is available! Please update your plugin.</aqua>"
                 );
@@ -105,7 +105,7 @@ public class CustomServerTeleport {
 
             String main_command = commands.get(0);
             String[] aliases = commands.subList(1, commands.size()).toArray(new String[0]);
-            String permission = (String) details.get("permission");
+            String permission = "cst.server." + details.get("permission");
 
             // Check if commands are already registered
             for (String command : commands) {
